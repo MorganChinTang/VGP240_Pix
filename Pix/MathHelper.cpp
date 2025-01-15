@@ -1,7 +1,7 @@
 #include "MathHelper.h"
 #include <cmath>
 
-bool IsEqual(float a, float b)
+bool MathHelper::IsEqual(float a, float b)
 {
 	return abs(a - b) < 0.01f;
 }

@@ -39,12 +39,26 @@ bool PrimitivesManager::EndDraw()
 		}
 	}
 	break;
+
 	case Topology::Line:
-		//Rasterizer::Get()->DrawLine(mVertexBuffer);
+	{
+		for (size_t i = 1; i < mVertexBuffer.size(); i += 2)
+		{
+			Rasterizer::Get()->DrawLine(mVertexBuffer[i - 1], mVertexBuffer[i]);
+		}
+
+	}
 		break;
+
 	case Topology::Triangle:
-		//Rasterizer::Get()->DrawTriangle(mVertexBuffer);
+	{
+		for (size_t i = 2; i < mVertexBuffer.size(); i += 3)
+		{
+			Rasterizer::Get()->DrawTriangle(mVertexBuffer[i - 2], mVertexBuffer[i - 1], mVertexBuffer[i]);
+		}
+	}
 		break;
+
 	default:
 		break;
 	}
