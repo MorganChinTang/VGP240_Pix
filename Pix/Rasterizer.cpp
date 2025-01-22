@@ -75,7 +75,7 @@ void Rasterizer::DrawLine(const Vertex& a, const Vertex& b)
 
 	if (abs(m) < 1)
 	{
-		if(a.pos.y<b.pos.y)
+		if(a.pos.x<b.pos.x)
 		{
 			DrawLineLow(a, b);
 		}
@@ -108,6 +108,7 @@ void Rasterizer::DrawTriangle(const Vertex& a, const Vertex& b, const Vertex& c)
 		DrawLine(b, c);
 		DrawLine(c, a);
 	}
+	break;
 
 	case FillMode::Solid:
 	{

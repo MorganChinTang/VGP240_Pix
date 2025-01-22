@@ -13,4 +13,7 @@ bool CmdSetFillMode::Execute(const std::vector<std::string>& params)
 		fillMode = FillMode::Solid;
 	else
 		return false;
+
+	Rasterizer::Get()->SetFillMode(fillMode);
+	return true;
 }
