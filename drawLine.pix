@@ -1,10 +1,15 @@
 SetResolution(20,20,20,true)
 
-BeginDraw(triangle)
+BeginDraw(line)
+
 Vertex(2,2,1,0,0)
-Vertex(15,7,0,1,0)
 Vertex(7,11,0,0,1)
 
 EndDraw()
+
+
+
+
+
 
 
