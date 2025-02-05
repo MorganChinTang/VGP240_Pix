@@ -37,8 +37,6 @@ namespace X
 		void SetNearPlane(float nearPlane);
 		void SetFarPlane(float farPlane);
 
-		const Math::Vector3& GetPosition() const { return mPosition; }
-
 		float GetFOV() const { return mFOV; }
 		float GetNearPlane() const { return mNearPlane; }
 		float GetFarPlane() const { return mFarPlane; }

@@ -1,3 +1,4 @@
+#include "Camera.h"
 //====================================================================================================
 // Filename:	Camera.cpp
 // Created by:	Peter Chan
@@ -24,6 +25,7 @@ Camera* Camera::Get()
 {
 	return sCamera;
 }
+
 
 Camera::Camera()
 	: mPosition(0.0f, 0.0f, 0.0f)

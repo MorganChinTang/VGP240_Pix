@@ -6,8 +6,10 @@
 
 namespace MathHelper
 {
+	constexpr float gDegToRad = 3.14159f / 180.0f;
 	bool IsEqual(float a, float b);
 
+	void FlattenVectorScreenCoords(Vector3& v);
 	float MagnitudeSquared(Vector2 v);
 	float MagnitudeSquared(Vector3 v);
 	float Magnitude(Vector2 v); 

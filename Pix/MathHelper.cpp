@@ -5,6 +5,13 @@ bool MathHelper::IsEqual(float a, float b)
 {
 	return abs(a - b) < 0.01f;
 }
+
+void MathHelper::FlattenVectorScreenCoords(Vector3& v)
+{
+	v.x = floorf(v.x + 0.5f);
+	v.y = floorf(v.y + 0.5f);
+}
+
 float MathHelper::MagnitudeSquared(Vector2 v)
 {
 	return v.x * v.x + v.y * v.y;
@@ -53,8 +60,8 @@ Vector3 MathHelper::Transformcoord(const Vector3& v, const Matrix4& m)
 	return Vector3
 	(
 		((v.x * m._11) + (v.y * m._21) + (v.z * m._31) + (1.0f * m._41)) * invW,
-		 (v.x * m._12) + (v.y * m._22) + (v.z * m._32) + (1.0f * m._42) * invW,
-		 (v.x * m._13) + (v.y * m._23) + (v.z * m._33) + (1.0f * m._43) * invW
+		((v.x * m._12) + (v.y * m._22) + (v.z * m._32) + (1.0f * m._42)) * invW,
+		((v.x * m._13) + (v.y * m._23) + (v.z * m._33) + (1.0f * m._43)) * invW
 	);
 }
 
