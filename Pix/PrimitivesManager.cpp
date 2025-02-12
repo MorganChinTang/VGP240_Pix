@@ -21,6 +21,30 @@ namespace
 			  hw,   hh, 0.0f, 1.0f
 		);
 	}
+
+	bool CullTriangle(CullMode mode, const std::vector<Vertex>& triangleInNDC)
+	{
+		if (mode == CullMode::None)
+		{
+			return false;
+		}
+
+		Vector3 abDir = triangleInNDC[1].pos - triangleInNDC[0].pos;
+		Vector3 bcDir = triangleInNDC[2].pos - triangleInNDC[0].pos;
+		Vector3 faceNormNDC = MathHelper::Normalize(MathHelper::Cross(abDir, bcDir));
+
+		if (mode == CullMode::Back)
+		{
+			return faceNormNDC.z > 0.0f;
+		}
+
+		if (mode == CullMode::Front)
+		{
+			return faceNormNDC.z < 0.0f;
+		}
+
+		return false;
+	}
 }
 
 PrimitivesManager* PrimitivesManager::Get()
@@ -28,6 +52,16 @@ PrimitivesManager* PrimitivesManager::Get()
 	static PrimitivesManager sInstance;
 	return &sInstance;
 }
+void PrimitivesManager::OnNewFrame()
+{
+	mCullMode = CullMode::Back;
+}
+
+void PrimitivesManager::SetCullMode(CullMode mode)
+{
+	mCullMode = mode;
+}
+
 //PrimitivesManager::PrimitivesManager()
 //{
 //
@@ -51,19 +85,7 @@ bool PrimitivesManager::EndDraw()
 	if(!mBeginDraw)
 		return false;
 
-	if (mApplyTransform)
-	{
-		Matrix4 matWorld = MatrixStack::Get()->GetTransform();
-		Matrix4 matView = Camera::Get()->GetViewMatrix();
-		Matrix4 matProj = Camera::Get()->GetProjectionMatrix();
-		Matrix4 matScreen = GetScreenTransform();
-		Matrix4 matFinal = matWorld * matView * matProj * matScreen;
-		for(size_t i= 0; i < mVertexBuffer.size(); i++)
-		{
-			mVertexBuffer[i].pos = MathHelper::Transformcoord(mVertexBuffer[i].pos, matFinal);
-			MathHelper::FlattenVectorScreenCoords(mVertexBuffer[i].pos);
-		}
-	}
+	
 
 	switch(mTopology)
 	{
@@ -97,13 +119,43 @@ bool PrimitivesManager::EndDraw()
 		for (size_t i = 2; i < mVertexBuffer.size(); i += 3)
 		{
 			std::vector<Vertex>triangle = { mVertexBuffer[i - 2], mVertexBuffer[i - 1], mVertexBuffer[i] };
-				if (!Clipper::Get()->ClipTriangle(triangle))
+			
+			if (mApplyTransform)
+			{
+				Matrix4 matWorld = MatrixStack::Get()->GetTransform();
+				Matrix4 matView = Camera::Get()->GetViewMatrix();
+				Matrix4 matProj = Camera::Get()->GetProjectionMatrix();
+				Matrix4 matScreen = GetScreenTransform();
+				Matrix4 matNDC = matWorld * matView * matProj;
+
+				//transform position into NDC space
+				for(size_t t=0;t<triangle.size();t++)
 				{
-					for (size_t v = 2;v < triangle.size();++v)
-					{
-						Rasterizer::Get()->DrawTriangle(triangle[0], triangle[v - 1], triangle[v]);
-					}
+					triangle[t].pos = MathHelper::Transformcoord(triangle[t].pos, matNDC);
 				}
+
+				//check if the triangle should be culled in NDC space
+				if (CullTriangle(mCullMode, triangle))
+				{
+					continue;
+				}
+
+				//transform from NDC space to screen space
+				for (size_t t = 0; t < triangle.size(); t++)
+				{
+					triangle[t].pos = MathHelper::Transformcoord(triangle[t].pos, matScreen);
+					MathHelper::FlattenVectorScreenCoords(triangle[t].pos);
+				}
+
+			}
+
+			if (!Clipper::Get()->ClipTriangle(triangle))
+			{
+				for (size_t v = 2; v < triangle.size(); ++v)
+				{
+					Rasterizer::Get()->DrawTriangle(triangle[0], triangle[v - 1], triangle[v]);
+				}
+			}
 		}
 	}
 		break;

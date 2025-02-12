@@ -1,7 +1,12 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
+
+//forward declaratiion
+
+struct Variable;
 
 class VariableCache
 {
@@ -18,15 +23,11 @@ public:
 
 	void ShowEditor();
 
-private:
-	struct FloatVar
-	{
-		std::string name;
-		float value;
-		float speed;
-		float min;
-		float max;
-	};
+	void AddBool(const std::string& name, bool value);
+	bool GetBool(const std::string& param);
 
-	std::vector<FloatVar> mFloatVars;
+private:
+
+	std::vector<std::unique_ptr<Variable>> mVariables;
+	std::vector<Variable*> mVars;
 };
