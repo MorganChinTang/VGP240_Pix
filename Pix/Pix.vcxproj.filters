@@ -180,6 +180,7 @@
     <ClCompile Include="CmdModel.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="CmdSetShadeMode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextEditor.h">
@@ -314,6 +315,7 @@
     <ClInclude Include="CmdModel.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="CmdSetShadeMode.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">

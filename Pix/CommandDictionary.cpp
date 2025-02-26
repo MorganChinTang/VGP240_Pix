@@ -24,6 +24,7 @@
 
 #include"CmdMaterial.h"
 #include"CmdLights.h"
+#include"CmdSetShadeMode.h"
 
 //#include "MathHelper.h"
 CommandDictionary* CommandDictionary::Get()
@@ -45,10 +46,9 @@ CommandDictionary::CommandDictionary()
 
 	// Rasterization commands
 	RegisterCommand<CmdDrawPixel>();
-
 	RegisterCommand<CmdSetColor>();
-
 	RegisterCommand<CmdEnableDepth>();
+	RegisterCommand<CmdSetShadeMode>();
 	
 	// Primitives commands
 	RegisterCommand<CmdBeginDraw>();

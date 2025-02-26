@@ -1,5 +1,6 @@
 #include "Clipper.h"
 #include "Viewport.h"
+#include "Rasterizer.h"
 
 const short BIT_INSIDE = 0;		//0000
 const short BIT_LEFT = 1 << 1;	//0001
@@ -35,7 +36,7 @@ bool IsInFront(ClipEdge edge, const Vector3& pos)
 	return false;
 }
 
-Vertex ComputeIntersection(ClipEdge edge, const Vertex& vN, const Vertex& vNP1)
+Vertex ComputeIntersection(ClipEdge edge, const Vertex& vN, const Vertex& vNP1, bool lerpNorm)
 {
 	Viewport* vp =Viewport::Get();
 	float t = 0.0f;
@@ -56,7 +57,7 @@ Vertex ComputeIntersection(ClipEdge edge, const Vertex& vN, const Vertex& vNP1)
 	default:
 		break;
 	}
-	return LerpVertex(vN, vNP1, t);
+	return LerpVertex(vN, vNP1, t, lerpNorm);
 }
 
 short GetOutputCode(float x, float y)
@@ -114,6 +115,8 @@ bool Clipper::ClipLine(Vertex& a, Vertex& b)
 		return false;
 	}
 
+	bool lerpNorm = Rasterizer::Get()->GetShadeMode() == ShadeMode::Phong;
+
 	float minX = Viewport::Get()->GetMinX();
 	float maxX = Viewport::Get()->GetMaxX();
 	float minY = Viewport::Get()->GetMinY();
@@ -155,12 +158,12 @@ bool Clipper::ClipLine(Vertex& a, Vertex& b)
 
 		if (outCode == codeA)
 		{
-			a=LerpVertex(a, b, t);
+			a=LerpVertex(a, b, t, lerpNorm);
 			codeA = GetOutputCode(a.pos.x, a.pos.y);
 		}
 		else 
 		{
-			b=LerpVertex(a, b, t);
+			b=LerpVertex(a, b, t, lerpNorm);
 			codeB = GetOutputCode(b.pos.x, b.pos.y);
 		}
 
@@ -174,6 +177,9 @@ bool Clipper::ClipTriangle(std::vector<Vertex>& vertices)
 	{
 		return false;
 	}
+
+	bool lerpNorm = Rasterizer::Get()->GetShadeMode() == ShadeMode::Phong;
+
 	std::vector<Vertex>newVertices;
 	for (int i = 0;i < (int)ClipEdge::Count;i++)
 	{
@@ -201,11 +207,11 @@ bool Clipper::ClipTriangle(std::vector<Vertex>& vertices)
 			}
 			else if (nIsInFront && !np1IsInFront)
 			{
-				newVertices.push_back(ComputeIntersection(edge, vN, vNP1));
+				newVertices.push_back(ComputeIntersection(edge, vN, vNP1, lerpNorm));
 			}
 			else if (!nIsInFront && np1IsInFront)
 			{
-				newVertices.push_back(ComputeIntersection(edge, vN, vNP1));
+				newVertices.push_back(ComputeIntersection(edge, vN, vNP1, lerpNorm));
 				newVertices.push_back(vNP1);
 			}
 		}

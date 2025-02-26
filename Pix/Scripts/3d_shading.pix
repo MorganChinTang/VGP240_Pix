@@ -29,8 +29,6 @@ float $rotX = 0, 0.1
 float $rotY = 0, 0.1
 float $rotZ = 0, 0.1
 
-SetShadeMode(phong)
-
 SetCameraPosition($camX, $camY, $camZ)
 SetCameraDirection($camDirX, $camDirY, $camDirZ)
 
@@ -39,7 +37,8 @@ SetLightDiffuse(0.9, 0.0, 0.9)
 SetLightSpecular(0.3, 0.3, 0.3)
 AddSpotLight($lPosX, $lPosY, $lPosZ, $lDirX, $lDirY, $lDirZ, 1, 0.1, 0 ,$lAngle, $lDecay)
 
-SetShadeMode(phong)
+SetShading(flat)
+
 BeginDraw(triangle, true)
 Model(../Models/plane_8x8.obj)
 //Model(../Models/plane_32x32.obj)
@@ -48,7 +47,7 @@ EndDraw()
 PushTranslation($lPosX, $lPosY, $lPosZ)
 PushScaling(0.1, 0.1, 0.1)
 
-SetShadeMode(flat)
+SetShadeMode(Phong)
 BeginDraw(triangle, true)
 Model(../Models/cube.obj)
 EndDraw()
@@ -62,10 +61,8 @@ PushRotationY($rotY)
 PushRotationX($rotX)
 PushScaling(0.5, 0.5, 0.5)
 
-SetShadeMode(gouraud)
+SetShading(phong)
 BeginDraw(triangle, true)
-Model(../Models/snow_man.obj)
+Model(../Models/torus_knot.obj)
 EndDraw()
-
-
 

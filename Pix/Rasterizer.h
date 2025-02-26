@@ -25,6 +25,7 @@ public:
 	void SetColor(X::Color color);
 	void SetFillMode(FillMode fillMode);
 	void SetShadeMode(ShadeMode shadeMode);
+	ShadeMode GetShadeMode();
 
 	void DrawPoint(int x, int y);
 	void DrawPoint(const Vertex& vertex);

@@ -33,7 +33,7 @@ SetLightAmbient(0.2, 0.2, 0.2)
 SetLightDiffuse(0.9, 0.9, 0.9)
 SetLightSpecular(0.3, 0.3, 0.3)
 AddPointLight($lightPosX, $lightPosY, $lightPosZ, $attenC, $attenL, $attenQ)
-
+SetShadeMode(gouraud)
 
 BeginDraw(triangle, true)
 

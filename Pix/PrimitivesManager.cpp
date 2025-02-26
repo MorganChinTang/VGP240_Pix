@@ -4,7 +4,7 @@
 #include "MatrixStack.h"
 #include "Camera.h"
 #include "LightManager.h"
-
+#include "Rasterizer.h"
 extern float gResolutionX;
 extern float gResolutionY;
 
@@ -136,24 +136,56 @@ bool PrimitivesManager::EndDraw()
                 Matrix4 matProj = Camera::Get()->GetProjectionMatrix();
                 Matrix4 matScreen = GetScreenTransform();
                 Matrix4 matNDC = matView * matProj;
+                ShadeMode shadeMode= Rasterizer::Get()->GetShadeMode();
 
                 //transform position into world space
                 for (size_t t=0;t<triangle.size();t++)
                 {
                     triangle[t].pos = MathHelper::Transformcoord(triangle[t].pos, matWorld);
+                    triangle[t].posWorld = triangle[t].pos;
+                }
+
+                //if we dont have a normal, add one
+                if (MathHelper::IsEqual(MathHelper::MagnitudeSquared(triangle[0].norm), 0.0f))
+                {
+                    Vector3 faceNormal=CreateFaceNormal(triangle);
+                    for (size_t t = 0; t < triangle.size(); t++)
+                    {
+                        triangle[t].norm = faceNormal;
+                    }
+                }
+                //if we have, transform into world space
+                else
+                {
+                    for(size_t t = 0; t < triangle.size(); t++)
+					{
+						triangle[t].norm = MathHelper::TransformNormal(triangle[t].norm, matWorld);
+					}
                 }
 
                 //apply light to vertices
                 //Lighting needs to be calculated in World Space (vertex lighting is in world space)
-                Vector3 faceNormal=CreateFaceNormal(triangle);
-                for(size_t t=0; t<triangle.size(); t++)
-				{
-                    triangle[t].color *= LightManager::Get()->ComputeLightColor(triangle[t].pos, faceNormal);
-				}
+                
+                if (shadeMode == ShadeMode::Flat)
+                {
+                    triangle[0].color *= LightManager::Get()->ComputeLightColor(triangle[0].pos, triangle[0].norm);
+					triangle[1].color = triangle[0].color;
+					triangle[2].color = triangle[0].color;
+
+                }
+                else if (shadeMode == ShadeMode::Gouraud)
+                {
+                    for(size_t t=0; t<triangle.size(); t++)
+				    {
+                        triangle[t].color *= LightManager::Get()->ComputeLightColor(triangle[t].pos, triangle[t].norm);
+				    }
+                }
+                
                 //transform position into NDC space
                 for(size_t t=0;t<triangle.size();t++)
                 {
                     triangle[t].pos = MathHelper::Transformcoord(triangle[t].pos, matNDC);
+
                 }
 
                 //check if the triangle should be culled in NDC space

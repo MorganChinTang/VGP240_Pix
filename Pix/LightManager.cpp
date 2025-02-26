@@ -68,6 +68,11 @@ void LightManager::AddSpotLight(const Vector3& position, const Vector3& directio
 
 X::Color LightManager::ComputeLightColor(const Vector3& position, const Vector3& normal) const
 {
+    if (mLights.empty())
+    {
+        return X::Colors::White;
+    }
+
     X::Color color = MaterialManager::Get()->GetMaterialEmissive();
     for (auto& light : mLights)
     {
