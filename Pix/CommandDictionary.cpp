@@ -10,6 +10,7 @@
 #include"CmdEndDraw.h"
 #include"CmdAddVertex.h"
 #include"CmdSetFillMode.h"
+#include"CmdModel.h"
 
 #include"CmdSetViewport.h"
 #include"CmdShowViewport.h"
@@ -55,6 +56,7 @@ CommandDictionary::CommandDictionary()
 	RegisterCommand<CmdAddVertex>();
 	RegisterCommand<CmdSetFillMode>();
 	RegisterCommand<CmdSetCullMode>();
+	RegisterCommand<CmdModel>();
 
 	//viewport commands
 	RegisterCommand<CmdSetViewport>();
@@ -98,6 +100,7 @@ CommandDictionary::CommandDictionary()
 	RegisterCommand<CmdSetLightSpecular>();
 	RegisterCommand<CmdAddDirectionalLight>();
 	RegisterCommand<CmdAddPointLight>();
+	RegisterCommand<CmdAddSpotLight>();
 }
 
 TextEditor::LanguageDefinition CommandDictionary::GenerateLanguageDefinition()
