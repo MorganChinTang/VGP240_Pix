@@ -109,6 +109,7 @@ void VariableCache::AddBool(const std::string& name, bool value)
 			auto boolVar = std::make_unique<BoolVar>();
 			boolVar->name = name;
 			boolVar->value = value;
+			mVariables.emplace_back(std::move(boolVar));
 		}
 	}
 }

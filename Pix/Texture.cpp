@@ -36,6 +36,33 @@ namespace
         return newStride;
     }
 #pragma pack(pop)
+
+    X::Color GetBilinearFilterPixelColor(const Texture& tex, float u, float v)
+    {
+        //step 1, convert u,v coords to texel coords
+        float uTex = u * static_cast<float>(tex.GetWidth());
+        float vTex = v * static_cast<float>(tex.GetHeight());
+
+        //step 2, convert the floats to ints to get the pixel indices
+        int uTexInt = static_cast<int>(uTex);
+        int vTexInt = static_cast<int>(vTex);
+
+        //step 3, get the float remainder as a ratio
+        float uRatio = uTex - static_cast<float>(uTexInt);
+        float vRatio = vTex - static_cast<float>(vTexInt);
+
+        //step 4, get the opposite ratios
+        float uOpposite = 1.0f - uRatio;
+        float vOpposite = 1.0f - vRatio;
+
+        //step 5, get all neighboring pixel colors
+        X::Color a = tex.GetPixel(uTexInt, vTexInt) * uOpposite;
+        X::Color b = tex.GetPixel(uTexInt + 1, vTexInt) * uRatio;
+        X::Color c = tex.GetPixel(uTexInt, vTexInt + 1) * uOpposite;
+        X::Color d = tex.GetPixel(uTexInt + 1, vTexInt + 1) * uRatio;
+
+        return(a + b) * vOpposite + (c + d) * vRatio;
+    }
 }
 
 void Texture::Load(const std::string& fileName)
@@ -105,8 +132,52 @@ int Texture::GetHeight() const
 	return mHeight;
 }
 
-X::Color Texture::GetPixel(float u, float v) const
+X::Color Texture::GetPixel(float u, float v, bool filter, AddressMode addressMode) const
 {
+    switch (addressMode)
+    {
+        case AddressMode::Border:
+        if (u > 1.0f || u < 0.0f || v > 1.0f || v < 0.0f)
+        {
+            return X::Colors::HotPink;
+        }
+        break;
+
+        case AddressMode::Clamp:
+        {
+            u = std::clamp(u, 0.0f, 1.0f);
+            v = std::clamp(v, 0.0f, 1.0f);
+        }
+        break;
+
+        case AddressMode::Wrap:
+        {
+            while (u > 1.0f){u -= 1.0f;}
+            while (u < 0.0f){u += 1.0f;}
+            while (v > 1.0f){v -= 1.0f;}
+            while (v < 0.0f){v += 1.0f;}
+        }
+        break;
+
+        case AddressMode::Mirror:
+        {
+            while (u > 2.0f) { u -= 2.0f; }
+            while (u < 0.0f) { u += 2.0f; }
+            u = (u > 1.0f) ? 2.0f - u : u;
+            while (v > 2.0f) { v -= 2.0f; }
+            while (v < 0.0f) { v += 2.0f; }
+            v = (v > 1.0f) ? 2.0f - v : v;
+        }
+        break;
+        
+        default:
+        break;
+            
+    }
+    if (filter)
+    {
+         return GetBilinearFilterPixelColor(*this, u, v);
+    }
     int uIndex = static_cast<int>(u * (mWidth - 1));
     int vIndex = static_cast<int>(v * (mHeight - 1));
 	return GetPixel(uIndex, vIndex);

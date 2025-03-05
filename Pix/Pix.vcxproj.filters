@@ -185,6 +185,14 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="CmdSetTexture.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdSetCorrectUV.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdSetUseFilter.cpp" />
+    <ClCompile Include="CmdSetAddressMode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextEditor.h">
@@ -324,6 +332,14 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="CmdSetTexture.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdSetCorrectUV.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdSetUseFilter.h" />
+    <ClInclude Include="CmdSetAddressMode.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Editor">

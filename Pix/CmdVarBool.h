@@ -8,7 +8,7 @@ public:
 	const char* GetName()
 		override
 	{
-		return "CmdVarBool";
+		return "bool";
 	}
 
 	const char* GetDescription()

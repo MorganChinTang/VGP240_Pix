@@ -63,11 +63,17 @@ PrimitivesManager* PrimitivesManager::Get()
 void PrimitivesManager::OnNewFrame()
 {
     mCullMode = CullMode::Back;
+    mCorrectUV= false;
 }
 
 void PrimitivesManager::SetCullMode(CullMode mode)
 {
     mCullMode = mode;
+}
+
+void PrimitivesManager::SetCorrectUV(bool correctUV)
+{
+    mCorrectUV = correctUV;
 }
 
 //PrimitivesManager::PrimitivesManager()
@@ -185,6 +191,18 @@ bool PrimitivesManager::EndDraw()
                         }
                     }
                 }
+                else if (mCorrectUV)
+                {
+                    //apply perspective uv correction in view space
+                    for (size_t t = 0; t < triangle.size(); t++)
+                    {
+                        Vector3 viewSpacePos=MathHelper::Transformcoord(triangle[t].posWorld, matView);  
+                        triangle[t].color.x /= viewSpacePos.z;
+                        triangle[t].color.y /= viewSpacePos.z;
+                        triangle[t].color.w /= viewSpacePos.z;
+                    }
+                }
+
                 //transform position into NDC space
                 for(size_t t=0;t<triangle.size();t++)
                 {

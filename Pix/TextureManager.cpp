@@ -30,14 +30,24 @@ void TextureManager::SetTexture(const std::string& fileName)
     }
 }
 
+void TextureManager::SetUseFilter(bool useFilter)
+{
+    mUseFilter = useFilter;
+}
+
+void TextureManager::SetAddressMode(AddressMode addressMode)
+{
+    mAddressMode = addressMode;
+}
+
 X::Color TextureManager::SampleColor(const X::Color& uv) const
 {
     X::Color color = uv;
     if(mCurrentTexture != nullptr)
     {
-        float u = uv.x;
-        float v = uv.y;
-        color = mCurrentTexture->GetPixel(u, v);
+        float u = uv.x / uv.w;
+        float v = uv.y / uv.w;
+        color = mCurrentTexture->GetPixel(u, v,mUseFilter, mAddressMode);
     }
     return color;
 }

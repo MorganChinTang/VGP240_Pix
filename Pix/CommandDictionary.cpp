@@ -11,6 +11,10 @@
 #include"CmdAddVertex.h"
 #include"CmdSetFillMode.h"
 #include"CmdModel.h"
+#include "CmdSetTexture.h"
+#include "CmdSetCorrectUV.h"
+#include "CmdSetUseFilter.h"
+#include "CmdSetAddressMode.h"
 
 #include"CmdSetViewport.h"
 #include"CmdShowViewport.h"
@@ -57,6 +61,10 @@ CommandDictionary::CommandDictionary()
 	RegisterCommand<CmdSetFillMode>();
 	RegisterCommand<CmdSetCullMode>();
 	RegisterCommand<CmdModel>();
+	RegisterCommand<CmdSetTexture>();
+	RegisterCommand<CmdSetCorrectUV>();
+	RegisterCommand<CmdSetUseFilter>();
+	RegisterCommand<CmdSetAddressMode>();
 
 	//viewport commands
 	RegisterCommand<CmdSetViewport>();
