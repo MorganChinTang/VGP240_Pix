@@ -8,7 +8,7 @@
 #include "DepthBuffer.h"
 #include "MaterialManager.h"
 #include "LightManager.h"
-
+#include "PostProcessing.h"
 void Graphics::NewFrame()
 {
 	Viewport::Get()->OnNewFrame();
@@ -19,4 +19,5 @@ void Graphics::NewFrame()
 	DepthBuffer::Get()->OnNewFrame();
 	MaterialManager::Get()->OnNewFrame();
 	LightManager::Get()->OnNewFrame();
+	PostProcessing::Get()->OnNewFrame();
 }

@@ -30,6 +30,8 @@
 #include"CmdLights.h"
 #include"CmdSetShadeMode.h"
 
+#include"CmdPostProcessing.h"
+
 //#include "MathHelper.h"
 CommandDictionary* CommandDictionary::Get()
 {
@@ -109,6 +111,11 @@ CommandDictionary::CommandDictionary()
 	RegisterCommand<CmdAddDirectionalLight>();
 	RegisterCommand<CmdAddPointLight>();
 	RegisterCommand<CmdAddSpotLight>();
+
+	//PostProcessing commands
+    RegisterCommand<CmdPostProcessingBeginDraw>();
+	RegisterCommand<CmdPostProcessingEndDraw>();
+	RegisterCommand<CmdPostProcessingSetEffectType>();
 }
 
 TextEditor::LanguageDefinition CommandDictionary::GenerateLanguageDefinition()
