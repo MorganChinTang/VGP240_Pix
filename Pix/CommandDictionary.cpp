@@ -31,6 +31,7 @@
 #include"CmdSetShadeMode.h"
 
 #include"CmdPostProcessing.h"
+#include"CmdRayTracer.h"
 
 //#include "MathHelper.h"
 CommandDictionary* CommandDictionary::Get()
@@ -116,6 +117,13 @@ CommandDictionary::CommandDictionary()
     RegisterCommand<CmdPostProcessingBeginDraw>();
 	RegisterCommand<CmdPostProcessingEndDraw>();
 	RegisterCommand<CmdPostProcessingSetEffectType>();
+
+	//RayTracing Commands
+	RegisterCommand<CmdBeginRayTracing>();
+    RegisterCommand<CmdEndRayTracing>();
+	RegisterCommand<CmdRTSphere>();
+	RegisterCommand<CmdRTLight>();
+
 }
 
 TextEditor::LanguageDefinition CommandDictionary::GenerateLanguageDefinition()
